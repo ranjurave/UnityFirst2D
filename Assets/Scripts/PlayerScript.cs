@@ -2,39 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerScript : MonoBehaviour
-{
+public class PlayerScript : MonoBehaviour {
     Rigidbody2D playerRB;
     Animator playerAnimator;
     Collider2D playerCollider;
 
-    float playerSpeed = 4000;
+    [SerializeField] GameObject Projectile;
+    [SerializeField] Transform ProjectileStartPoint;
+
+    [HideInInspector] public int CoinsCollected = 0; // public to access it from the HUDScript class
+
+    float PlayerSpeed = 4000;
     float JumpSpeed = 5;
+    int Life = 2;
+    bool IsAlive = true;
 
-    [SerializeField]
-    GameObject Projectile;
-    Transform ProjectileStartPoint;
-
-    [HideInInspector]
-    public int CoinsCollected = 0; // public to access it from the HUDScript class
-
-    void Start()
-    {
+    void Start() {
         playerRB = GetComponent<Rigidbody2D>(); // getting referece of the component
         playerAnimator = GetComponent<Animator>(); // getting referece of the component
         playerCollider = GetComponent<Collider2D>(); // getting referece of the component
-        ProjectileStartPoint = GetComponentInChildren<GameObject>().transform;
     }
 
     void Update() {
-        bool playerHorizontalMove = PlayerMovement();
-        AnimationChange(playerHorizontalMove);
-        Jump();
+        if (IsAlive) {
+            PlayerMovement();
+            Jump();
+            Fire();
+        }
+    }
 
-        if (Input.GetButtonDown("Fire1")) {
-            Debug.Log("Fire Fire....");
+    private void PlayerMovement() {
+        // Getting input and moving the character
+        float controlThrow = Input.GetAxis("Horizontal");
+        Vector2 playerVelocity = new Vector2(controlThrow * PlayerSpeed * Time.deltaTime, playerRB.velocity.y);
+        playerRB.velocity = playerVelocity;
+
+        // Rotating character instead of scaling for projectile to work fine.
+        if (Input.GetAxis("Horizontal") < 0) {
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
+        if (Input.GetAxis("Horizontal") > 0) {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
         }
 
+        bool playerHorizontalMove = Mathf.Abs(playerRB.velocity.y) > 0;
+
+        if (playerHorizontalMove) {
+            AnimationChange(playerHorizontalMove);
+        }
     }
 
     private void AnimationChange(bool playerHorizontalMove) {
@@ -42,18 +57,10 @@ public class PlayerScript : MonoBehaviour
         playerAnimator.SetBool("CanWalk", playerHorizontalMove);
     }
 
-    private bool PlayerMovement() {
-        // flipping the character to face the direction it moves
-        bool playerHorizontalMove = Mathf.Abs(playerRB.velocity.y) > 0;
-        if (playerHorizontalMove) {
-            transform.localScale = new Vector3(Mathf.Sign(playerRB.velocity.x) * -1, 1, 1);
+    private void Fire() {
+        if (Input.GetButtonDown("Fire1")) {
+            Instantiate(Projectile, ProjectileStartPoint.position, ProjectileStartPoint.rotation);
         }
-
-        // Getting input and moving the character
-        float controlThrow = Input.GetAxis("Horizontal") * Time.deltaTime;
-        Vector2 playerVelocity = new Vector2(controlThrow * playerSpeed, playerRB.velocity.y);
-        playerRB.velocity = playerVelocity;
-        return playerHorizontalMove;
     }
 
     private void Jump() {
@@ -71,8 +78,21 @@ public class PlayerScript : MonoBehaviour
         if (collision.gameObject.CompareTag("Coin")) {
             CoinsCollected++;
             Destroy(collision.gameObject);
-            Debug.Log(CoinsCollected);
+            //Debug.Log(CoinsCollected);
+        }
 
+        if (collision.gameObject.CompareTag("Enemy")) {
+            Life--;
+            Destroy(collision.gameObject);
+            if (Life < 0) {
+                //Debug.Log("DEAD.....");
+                IsAlive = false;
+                playerAnimator.SetTrigger("DeathTrigger");
+
+                // If dead, then we can destroy or simply hide the player
+                //gameObject.SetActive(false); // Hide player
+                Destroy(gameObject, 2); // Destroy the player game object
+            }
         }
     }
 }

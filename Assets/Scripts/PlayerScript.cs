@@ -7,9 +7,14 @@ public class PlayerScript : MonoBehaviour
     Rigidbody2D playerRB;
     Animator playerAnimator;
     Collider2D playerCollider;
-    [SerializeField]
+
     float playerSpeed = 4000;
     float JumpSpeed = 5;
+
+    [SerializeField]
+    GameObject Projectile;
+    Transform ProjectileStartPoint;
+
     [HideInInspector]
     public int CoinsCollected = 0; // public to access it from the HUDScript class
 
@@ -18,12 +23,18 @@ public class PlayerScript : MonoBehaviour
         playerRB = GetComponent<Rigidbody2D>(); // getting referece of the component
         playerAnimator = GetComponent<Animator>(); // getting referece of the component
         playerCollider = GetComponent<Collider2D>(); // getting referece of the component
+        ProjectileStartPoint = GetComponentInChildren<GameObject>().transform;
     }
 
     void Update() {
         bool playerHorizontalMove = PlayerMovement();
         AnimationChange(playerHorizontalMove);
         Jump();
+
+        if (Input.GetButtonDown("Fire1")) {
+            Debug.Log("Fire Fire....");
+        }
+
     }
 
     private void AnimationChange(bool playerHorizontalMove) {

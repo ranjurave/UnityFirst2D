@@ -944,6 +944,11 @@ RectTransform:
   m_AnchoredPosition: {x: -255, y: 184}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!4 &1215734272 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7423821309906607232, guid: 9961c0dddbe7cbf4fa9e5cec8d78b993, type: 3}
+  m_PrefabInstance: {fileID: 2300138967105318580}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1449146895
 GameObject:
   m_ObjectHideFlags: 0
@@ -3725,6 +3730,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2300138968239442696, guid: 9961c0dddbe7cbf4fa9e5cec8d78b993, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300138968239442696, guid: 9961c0dddbe7cbf4fa9e5cec8d78b993, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.74
       objectReference: {fileID: 0}
@@ -3764,6 +3773,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300138968239442699, guid: 9961c0dddbe7cbf4fa9e5cec8d78b993, type: 3}
+      propertyPath: Projectile
+      value: 
+      objectReference: {fileID: 4740063811326115674, guid: 2f06cc7f8f6dd214dac54ca4307a27ef, type: 3}
+    - target: {fileID: 2300138968239442699, guid: 9961c0dddbe7cbf4fa9e5cec8d78b993, type: 3}
+      propertyPath: ProjectileStartPoint
+      value: 
+      objectReference: {fileID: 1215734272}
     - target: {fileID: 2300138968239442702, guid: 9961c0dddbe7cbf4fa9e5cec8d78b993, type: 3}
       propertyPath: m_Name
       value: PlayerCharacter
